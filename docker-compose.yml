@@ -37,15 +37,6 @@ services:
       - mongo
       - redis
 
-  react:
-    build:
-      context: .
-      dockerfile: Dockerfile.react
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
   nginx:
     build:
       context: .
@@ -73,7 +64,6 @@ services:
       - "6379:6379"
     networks:
       - app-network
-
 
 networks:
   app-network:
