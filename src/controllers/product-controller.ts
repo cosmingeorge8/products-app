@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {io} from '../app';
 import {ProductService} from "../services/product-service";
 import {body, param, validationResult} from "express-validator";
+import {UploadService} from "../services/upload-service";
 
 export class ProductController {
     static validate(method: string) {
@@ -27,6 +28,11 @@ export class ProductController {
 
     static async getProducts(req: Request, res: Response) {
         const products = await ProductService.getAllProducts();
+
+        products.forEach(product => {
+           product.image = UploadService.getSignedUrl(product.image);
+        });
+
         res.status(200).send(products);
     }
 
@@ -52,6 +58,18 @@ export class ProductController {
         const product = await ProductService.deleteProduct(req.params.id);
         io.emit('productChange', product);
         res.status(204);
+    }
+
+    static async updateProduct(req: Request, res: Response) {
+        // Validate the request
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const product = await ProductService.updateProduct(req.params.id, req.body);
+        io.emit('productChange', product);
+        res.status(200).json(product);
     }
 }
 
