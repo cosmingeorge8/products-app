@@ -20,7 +20,13 @@ export class ProductService {
         return Product.create(product);
     }
 
-    static async updateProduct(id: string, product: any) {
+    static async updateProduct(id: string, product: IProduct) {
+        this.logger.info(`Updating product with ID: ${id}`);
+        // We need to check the image field to see if it contains a new image URL or is it just a signed URL
+        // Remove the signed URL from the image field
+        if (product.image.includes('?X-Amz')) {
+            product.image = product.image.split('?X-Amz')[0];
+        }
         return Product.findByIdAndUpdate(id, product, {new: true});
     }
 
