@@ -7,6 +7,10 @@ dotenv.config();
 
 const logger: Logger = new Logger('Database');
 
+/**
+ * Connects to the MongoDB database.
+ * If the connection fails, the process will exit with code 1.
+ */
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI as string);
@@ -18,12 +22,15 @@ const connectDB = async () => {
     }
 };
 
+/**
+ * Seeds the MongoDB database with data
+ */
 const seedDB = async () => {
     logger.info('Seeding database');
     const product = new Product({
         name: 'Product 1',
         price: 100,
-        image: 'https://via.placeholder.com/150',
+        image: 'placeholder.jpg',
         stock: 10
     });
 

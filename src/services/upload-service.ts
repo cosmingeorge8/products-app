@@ -3,14 +3,30 @@ import {Logger} from "../logger/logger";
 import {FileUploadError} from "../errors/file-upload-error";
 import {S3} from "aws-sdk";
 
-
+/**
+ * Service class for handling file upload operations.
+ */
 export class UploadService {
 
+    /**
+     * Logger instance for logging messages related to UploadService operations.
+     */
     private static readonly logger = new Logger(UploadService.name);
+
+    /**
+     * AWS S3 instance for handling file uploads.
+     */
     private static s3 = new S3({
         signatureVersion: 'v4',
     });
 
+    /**
+     * Uploads a file to AWS S3.
+     * If the file is not an image, it throws a FileUploadError.
+     * @param {UploadedFile} file - The file to upload.
+     * @returns {Promise<string>} A promise that resolves to the URL of the uploaded file.
+     * @throws {FileUploadError} If the file is not an image or if an error occurs during upload.
+     */
     static async uploadFile(file: UploadedFile): Promise<string> {
         this.logger.info('Uploading image');
         //Check if the file is an image
@@ -20,6 +36,12 @@ export class UploadService {
         return await this.uploadToS3(file);
     }
 
+    /**
+     * Uploads a file to AWS S3.
+     * @param {UploadedFile} file - The file to upload.
+     * @returns {Promise<string>} A promise that resolves to the URL of the uploaded file.
+     * @throws {FileUploadError} If an error occurs during upload.
+     */
     private static async uploadToS3(file: UploadedFile) {
         this.logger.info(`Uploading image to S3 ${file.name}`);
         //Upload the file to S3
@@ -40,6 +62,12 @@ export class UploadService {
         }
     }
 
+    /**
+     * Generates a signed URL for an image in AWS S3.
+     * @param {string} image - The URL of the image.
+     * @returns {string} The signed URL.
+     * @throws {FileUploadError} If an error occurs while generating the signed URL.
+     */
     static getSignedUrl(image: string) {
         this.logger.info(`Getting signed URL for image ${image}`);
         //Get the key from the image URL

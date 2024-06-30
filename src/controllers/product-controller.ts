@@ -4,7 +4,15 @@ import {ProductService} from "../services/product-service";
 import {body, param, validationResult} from "express-validator";
 import {UploadService} from "../services/upload-service";
 
+/**
+ * ProductController class handles all the product related operations.
+ */
 export class ProductController {
+    /**
+     * Validates the request based on the method type.
+     * @param {string} method - The method type.
+     * @returns {Array} - Returns an array of validation rules.
+     */
     static validate(method: string) {
         switch (method) {
             case 'createProduct': {
@@ -26,6 +34,11 @@ export class ProductController {
         }
     }
 
+    /**
+     * Fetches all the products and sends them as a response.
+     * @param {Request} req - The request object.
+     * @param {Response} res - The response object.
+     */
     static async getProducts(req: Request, res: Response) {
         const products = await ProductService.getAllProducts();
 
@@ -36,6 +49,11 @@ export class ProductController {
         res.status(200).send(products);
     }
 
+    /**
+     * Creates a new product.
+     * @param {Request} req - The request object.
+     * @param {Response} res - The response object.
+     */
     static async createProduct(req: Request, res: Response) {
         // Validate the request
         const errors = validationResult(req);
@@ -48,6 +66,11 @@ export class ProductController {
         res.status(201).json(product);
     }
 
+    /**
+     * Deletes a product.
+     * @param {Request} req - The request object.
+     * @param {Response} res - The response object.
+     */
     static async deleteProduct(req: Request, res: Response) {
         // Validate the request
         const errors = validationResult(req);
@@ -60,6 +83,11 @@ export class ProductController {
         res.status(204);
     }
 
+    /**
+     * Updates a product.
+     * @param {Request} req - The request object.
+     * @param {Response} res - The response object.
+     */
     static async updateProduct(req: Request, res: Response) {
         // Validate the request
         const errors = validationResult(req);
@@ -72,7 +100,3 @@ export class ProductController {
         res.status(200).json(product);
     }
 }
-
-
-
-
