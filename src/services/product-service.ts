@@ -7,7 +7,7 @@ export class ProductService {
 
     static async getAllProducts() {
         this.logger.info('Fetching all products');
-        const products = await  Product.find();
+        const products = await Product.find();
         if (!products || products.length === 0) {
             this.logger.warn('No products found');
             throw new NotFoundError('No products found');
@@ -15,15 +15,15 @@ export class ProductService {
         this.logger.info('Products fetched successfully');
         return products;
     }
+
     static async createProduct(product: IProduct) {
         return Product.create(product);
     }
-    static async getProductById(id: number) {
-        return Product.findById(id);
+
+    static async updateProduct(id: string, product: any) {
+        return Product.findByIdAndUpdate(id, product, {new: true});
     }
-    static async updateProduct(id: number, product: any) {
-        return Product.findByIdAndUpdate(id, product, { new: true });
-    }
+
     static async deleteProduct(id: string) {
         this.logger.info(`Deleting product with ID: ${id}`);
         const result = await Product.findByIdAndDelete(id);
